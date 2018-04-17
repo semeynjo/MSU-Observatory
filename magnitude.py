@@ -91,3 +91,27 @@ class MagnitudeCalculation():
             + ((2.5*self.C4error/(np.log(10.0)*self.C4counts))**2))
             print(Tmag4[0],Terrmag4[0])
             return Tmag2, Terrmag2, Tmag3, Terrmag3, Tmag4, Terrmag4
+
+def V_var(vvar, vcomp, bvar, bcomp, Vcomp):
+    '''
+    Calculates the color transformed values for V magnitude
+
+    Parameters:
+    vvar: variable star measured V magnitude
+    vcomp: comparison star measured V magnitude
+    TvBv, Tbv: color transforms
+    bvar: variable star measured B magnitude
+    bcomp: comparison star measured B magnitude
+    Vcomp: published V magnitude of comparison star
+    '''
+
+    Tbv = 1.44000005722046
+    Tvbv = -0.0579999983310699
+
+    deltav = vvar - vcomp
+
+    deltabv = (bvar-vvar)-(bcomp-vcomp)
+
+    deltaBV = Tbv * deltabv
+
+    return deltav + Tvbv * deltaBV + Vcomp
