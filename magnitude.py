@@ -105,8 +105,8 @@ def V_var(vvar, vcomp, bvar, bcomp, Vcomp):
     Vcomp: published V magnitude of comparison star
     '''
 
-    Tbv = 1.44000005722046
-    Tvbv = -0.0579999983310699
+    Tbv = 1.458
+    Tvbv = -0.065
 
     deltav = vvar - vcomp
 
@@ -115,3 +115,28 @@ def V_var(vvar, vcomp, bvar, bcomp, Vcomp):
     deltaBV = Tbv * deltabv
 
     return deltav + Tvbv * deltaBV + Vcomp
+
+def B_var(vvar, vcomp, bvar, bcomp, Bcomp):
+    '''
+    Calculates the color transformed values for B magnitude
+
+    Parameters:
+    vvar: variable star measured V magnitude
+    vcomp: comparison star measured V magnitude
+    TbBv, Tbv: color transforms
+    bvar: variable star measured B magnitude
+    bcomp: comparison star measured B magnitude
+    Bcomp: published B magnitude of comparison star
+    '''
+
+    Tbv = 1.458
+
+    Tbbv = 0.250
+
+    deltab = bvar - bcomp
+
+    deltabv = (bvar-vvar)-(bcomp-vcomp)
+
+    deltaBV = Tbv * deltabv
+
+    return deltab + Tbbv * deltaBV + Bcomp
