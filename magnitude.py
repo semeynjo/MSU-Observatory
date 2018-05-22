@@ -76,8 +76,12 @@ class MagnitudeCalculation():
         if self.numC > 6 or self.numC < 1:
             raise ValueError('Number of comparison stars must be between 1 and 6')
         self.star_name = input('Star name:')
-        self.filter = input('input the filter type (R, V, I, or B):').upper()
-        if self.filter == 'I' or self.filter == 'R':
+        filter = input('input the filter type (CLEAR, R, V, I, or B): ').upper()
+        if filter == 'CLEAR':
+            self.filter = 'CV'
+        else:
+            self.filter = filter
+        if self.filter == 'I' or self.filter == 'R' or self.filter == 'CV':
             self.trans = 'NO'
         else:
             self.trans = input('Transforming the data? (YES or NO)').upper()
@@ -258,6 +262,6 @@ class MagnitudeCalculation():
         print('#OBSTYPE=CCD') #Do not change
         print('#NAME,DATE,MAG,MERR,FILT,TRANS,MTYPE,CNAME,CMAG,KNAME,KMAG,AMASS,GROUP,CHART,NOTES')
         for ii in range(0, self.time.size):
-            print(self.star_name,',','{0:13.5f},{1:6.3f},{2:5.3f}'.format(self.time[ii], mag_list[comp_star-1][ii],
+            print(self.star_name,',','{0:13.5f},{1:6.3f},{2:5.3f}'.format(self.time[ii]+2400000, mag_list[comp_star-1][ii],
             error_list[comp_star-1][ii]),',',self.filter,',',self.trans,',',self.mtype,',',cname,',',cmag,
             ',',kname,',',kmag,',','{0:5.3f}'.format(self.airmass[ii]),',',self.group,',',self.chart,',',self.notes,sep='')
