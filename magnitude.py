@@ -213,7 +213,12 @@ class MagnitudeCalculation():
 
 
     def CBA_print(self, mag_list, error_list):
-        comp_star = int(input('Which comparison star are you using to submit the data? (i.e. 1,2,3,4,5,or 6) '))
+        self.comp_star = int(input('Which comparison star are you using to submit the data? (i.e. 1,2,3,4,5,or 6) '))
+        comp_star = self.comp_star
+        self.check_star = int(input('Which comparison star are you using as the check star? (i.e. 1,2,3,4,5,or 6) '))
+        check_star = self.check_star
+        if self.comp_star == self.check_star:
+            raise ValueError('Comp star and check star cannot be the same')
         print('# JD              Var_Mag     Var_eMag   Airmass')
         for ii in range(0, self.time.size):
             print('{0:13.5f}    {1:7.3f}    {2:7.3f}    {3:7.3f}'. format(self.time[ii], mag_list[comp_star-1][ii],
@@ -222,37 +227,37 @@ class MagnitudeCalculation():
 
     def AAVSO_print(self, mag_list, error_list):
 
-        comp_star = int(input('Which comparison star are you using to submit the data? (i.e. 1,2,3,4,5,or 6) '))
-        check_star = int(input('Which comparison star are you using as the check star? (i.e. 1,2,3,4,5,or 6) '))
-        if comp_star == 1:
+        comp_star = self.comp_star
+        check_star = self.check_star
+        if self.comp_star == 1:
             cmag = self.C2mag
-        elif comp_star == 2:
+        elif self.comp_star == 2:
             cmag = self.C3mag
-        elif comp_star == 3:
+        elif self.comp_star == 3:
             cmag = self.C4mag
-        elif comp_star == 4:
+        elif self.comp_star == 4:
             cmag = self.C5mag
-        elif comp_star == 5:
+        elif self.comp_star == 5:
             cmag = self.C6mag
-        elif comp_star == 6:
+        elif self.comp_star == 6:
             cmag = self.C7mag
 
-        if check_star == 1:
+        if self.check_star == 1:
             kmag = self.C2mag
-        elif check_star == 2:
+        elif self.check_star == 2:
             kmag = self.C3mag
-        elif check_star == 3:
+        elif self.check_star == 3:
             kmag = self.C4mag
-        elif check_star == 4:
+        elif self.check_star == 4:
             kmag = self.C5mag
-        elif check_star == 5:
+        elif self.check_star == 5:
             kmag = self.C6mag
-        elif check_star == 6:
+        elif self.check_star == 6:
             kmag = self.C7mag
 
         cname = input('input the comp star name: ')
         kname = input('input the check star name: ')
-        obscode = input('input your AAVSO observer code: ')
+        obscode = input('input your AAVSO observer code: \n')
 
         print('#TYPE=Extended') #Do not change
         print('#OBSCODE=',obscode) #Your unique ID. Change one time, then let it be.
