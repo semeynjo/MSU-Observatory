@@ -70,13 +70,12 @@ class MagnitudeCalculation():
     have the ability to color correct the calculated magnitudes. Currently
     support for correcting V and B is being added.
     '''
-
     def __init__(self):
         self.numC = float(input('Number of comparison stars (up to 6):'))
         if self.numC > 6 or self.numC < 1:
             raise ValueError('Number of comparison stars must be between 1 and 6')
-        self.star_name = input('Star name:')
-        filter = input('input the filter type (CLEAR, R, V, I, or B): ').upper()
+        self.star_name = input('Source name:')
+        filter = input('input the filter type (Clear, R, V, I, or B): ').upper()
         if filter == 'CLEAR':
             self.filter = 'CV'
         else:
@@ -85,32 +84,45 @@ class MagnitudeCalculation():
             self.trans = 'NO'
         else:
             self.trans = input('Transforming the data? (YES or NO)').upper()
+        self.day  = str(input("Date of observations (Ex: 04Feb2018):"))
         self.mtype = 'STD'
         self.group = 'na'
         self.chart = 'na'
         self.notes = 'na'
-
+        
 
     def comp_stars(self):
 
-        self.C2mag = float(input('Magnitude of the first comparison star:'))
+        self.C2name=str(input('Name of first comparison star:'))
+        self.C2mag = float(input('Magnitude of the first comparison star:'))        
         if self.numC == 1:
             self.C3mag = 'none'
+            self.C3name = 'none'
         if self.numC  > 1:
+            self.C3name =str(input('Name of second comparison star:'))
             self.C3mag = float(input('Magnitude of the second comparison star:'))
+            
         if self.numC > 2:
+            self.C4name = str(input('Name of third comparison star:'))
             self.C4mag = float(input('Magnitude of the third comparison star:'))
+            
         if self.numC > 3:
+            self.C5name =str(input("Name of fourth comparison star:"))
             self.C5mag = float(input('Magnitude of the fourth comparison star:'))
+            
         if self.numC > 4:
+            self.C6name = str(input("Name of the fifth comparison star"))
             self.C6mag = float(input('Magnitude of the fifth comparison star:'))
+            
         if self.numC >5:
+            self.C7name = str(input("Name of the sixth comparison star"))
             self.C7mag = float(input('Magnitude of the sixth comparison star:'))
+            
 
 
     def read_file(self):
 
-        filename = input('input the filename (csv):')
+        filename = input('input the filename (csv):')+".csv"
 
         data = pd.read_csv(filename)
 
@@ -219,11 +231,88 @@ class MagnitudeCalculation():
         check_star = self.check_star
         if self.comp_star == self.check_star:
             raise ValueError('Comp star and check star cannot be the same')
+        
+        comp_star = self.comp_star
+        check_star = self.check_star
+        if self.comp_star == 1:
+            cmag = self.C2mag
+            cnam = self.C2name
+        elif self.comp_star == 2:
+            cmag = self.C3mag
+            cnam = self.C3name
+        elif self.comp_star == 3:
+            cmag = self.C4mag
+            cnam = self.C4name
+        elif self.comp_star == 4:
+            cmag = self.C5mag
+            cnam = self.C5name
+        elif self.comp_star == 5:
+            cmag = self.C6mag
+            cnam = self.C6name
+        elif self.comp_star == 6:
+            cmag = self.C7mag
+            cnam = self.C7name
+
+        if self.check_star == 1:
+            kmag = self.C2mag
+            knam = self.C2name
+        elif self.check_star == 2:
+            kmag = self.C3mag
+            knam = self.C3name
+        elif self.check_star == 3:
+            kmag = self.C4mag
+            knam = self.C4mag
+        elif self.check_star == 4:
+            kmag = self.C5mag
+            knam = self.C5name
+        elif self.check_star == 5:
+            kmag = self.C6mag
+            knam = self.C6name
+        elif self.check_star == 6:
+            kmag = self.C7mag
+            knam = self.c7name
+            
+        
+        exposure_time=str(input("input the exposure length (s):"))
+        observers= input("input the people observing: ")
+        notes= input("input any notes for the night (na if none):")
+        
+        print()
+        print('# Variable: ' + self.star_name)
+        print('# Date: ' + self.day )
+        print('# Comp star: ' + cnam + '_AAVSO_(V=',cmag,')')
+        print('# Check star: ' + knam + '_AAVSO_(V=',kmag,')')
+        print('# Exp time (s): ' + exposure_time + ' s')
+        print('# Filter: ' + self.filter + '')
+        print('# Observatory: Michigan State Campus Observatory')
+        print('# East Lansing, MI, USA')
+        print('# Observers: ' + observers + '')
+        print('# Comments: ' + notes + '')
         print('# JD              Var_Mag     Var_eMag   Airmass')
-        for ii in range(0, self.time.size):
+        for ii in range(10):
             print('{0:13.5f}    {1:7.3f}    {2:7.3f}    {3:7.3f}'. format(self.time[ii], mag_list[comp_star-1][ii],
             error_list[comp_star-1][ii], self.airmass[ii]))
-
+        print("...         Data Points:", self.time.size)
+        contiue=input("Write to file? (yes or no) ").lower()
+        if contiue== 'yes':
+            f = open('CBA_'+self.star_name+self.day+'_measurements.txt','w')
+           
+    
+            print('# Variable: ' + self.star_name,file=f)
+            print('# Date: ' + self.day, file=f )
+            print('# Comp star: ' + cnam + '_AAVSO_(V=',cmag,')',file=f)
+            print('# Check star: ' + knam + '_AAVSO_(V=',kmag,')',file=f)
+            print('# Exp time (s): ' + exposure_time + ' s',file=f)
+            print('# Filter: ' + self.filter + '',file=f)
+            print('# Observatory: Michigan State Campus Observatory',file=f)
+            print('# East Lansing, MI, USA',file=f)
+            print('# Observers: ' + observers + '',file=f)
+            print('# Comments: ' + notes + '',file=f)
+            print('# JD              Var_Mag     Var_eMag   Airmass',file=f)
+            fmt='{0:13.5f}    {1:7.3f}    {2:7.3f}    {3:7.3f}'
+            for ii in range(0, self.time.size):
+                print(fmt.format(self.time[ii], mag_list[comp_star-1][ii], error_list[comp_star-1][ii], self.airmass[ii]),file=f)  
+            f.close()
 
     def AAVSO_print(self, mag_list, error_list):
 
@@ -231,32 +320,43 @@ class MagnitudeCalculation():
         check_star = self.check_star
         if self.comp_star == 1:
             cmag = self.C2mag
+            cnam = self.C2name
         elif self.comp_star == 2:
             cmag = self.C3mag
+            cnam = self.C3name
         elif self.comp_star == 3:
             cmag = self.C4mag
+            cnam = self.C4name
         elif self.comp_star == 4:
             cmag = self.C5mag
+            cnam = self.C5name
         elif self.comp_star == 5:
             cmag = self.C6mag
+            cnam = self.C6name
         elif self.comp_star == 6:
             cmag = self.C7mag
+            cnam = self.C7name
 
         if self.check_star == 1:
             kmag = self.C2mag
+            knam = self.C2name
         elif self.check_star == 2:
             kmag = self.C3mag
+            knam = self.C3name
         elif self.check_star == 3:
             kmag = self.C4mag
+            knam = self.C4mag
         elif self.check_star == 4:
             kmag = self.C5mag
+            knam = self.C5name
         elif self.check_star == 5:
             kmag = self.C6mag
+            knam = self.C6name
         elif self.check_star == 6:
             kmag = self.C7mag
+            knam = self.c7name
 
-        cname = input('input the comp star name: ')
-        kname = input('input the check star name: ')
+       
         obscode = input('input your AAVSO observer code: \n')
 
         print('#TYPE=Extended') #Do not change
@@ -266,7 +366,24 @@ class MagnitudeCalculation():
         print('#DATE=JD') #Do not change
         print('#OBSTYPE=CCD') #Do not change
         print('#NAME,DATE,MAG,MERR,FILT,TRANS,MTYPE,CNAME,CMAG,KNAME,KMAG,AMASS,GROUP,CHART,NOTES')
-        for ii in range(0, self.time.size):
+        for ii in range(10):
             print(self.star_name,',','{0:13.5f},{1:6.3f},{2:5.3f}'.format(self.time[ii]+2400000, mag_list[comp_star-1][ii],
-            error_list[comp_star-1][ii]),',',self.filter,',',self.trans,',',self.mtype,',',cname,',',cmag,
-            ',',kname,',',kmag,',','{0:5.3f}'.format(self.airmass[ii]),',',self.group,',',self.chart,',',self.notes,sep='')
+            error_list[comp_star-1][ii]),',',self.filter,',',self.trans,',',self.mtype,',',cnam,',',cmag,
+            ',',knam,',',kmag,',','{0:5.3f}'.format(self.airmass[ii]),',',self.group,',',self.chart,',',self.notes,sep='')
+        print("...         Data Points:", self.time.size)
+        contiue=input("Write to text file? (yes or no) ").lower()
+        if contiue== 'yes':
+            fp = open('AAVSO_'+self.star_name+self.day+'_measurements.txt','w')
+            print('#TYPE=Extended',file=fp) #Do not change
+            print('#OBSCODE=',obscode,file=fp) #Your unique ID. Change one time, then let it be.
+            print('#SOFTWARE=Custom Python Script',file=fp) #Do not change
+            print('#DELIM=,',file=fp) #Do not change
+            print('#DATE=JD',file=fp) #Do not change
+            print('#OBSTYPE=CCD',file=fp) #Do not change
+            print('#NAME,DATE,MAG,MERR,FILT,TRANS,MTYPE,CNAME,CMAG,KNAME,KMAG,AMASS,GROUP,CHART,NOTES',file=fp)
+            for ii in range(0, self.time.size):
+                print(self.star_name,',','{0:13.5f},{1:6.3f},{2:5.3f}'.format(self.time[ii]+2400000, mag_list[comp_star-1][ii],
+                    error_list[comp_star-1][ii]),',',self.filter,',',self.trans,',',self.mtype,',',cnam,',',cmag,
+                    ',',knam,',',kmag,',','{0:5.3f}'.format(self.airmass[ii]),',',self.group,',',self.chart,',',self.notes,sep='',file=fp)
+            fp.close
+       
