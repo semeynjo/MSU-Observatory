@@ -5,3 +5,5 @@ Contained in this repository is magnitude.py and a clean notebook that, when run
 ## Running the code
 To run the code, you will need python (preferably 3.x) and the ability to run jupyter notebooks. Place the csv file in the same directory (folder) as the notebook and python file, then run each cell in the jupyter notebook, following the prompts given.
 **Important note: for the notebook to run smoothly, the data file must be saved as a csv**
+
+For questions/comments/concerns/suggestions, please email me at semeynjo@msu.edu
